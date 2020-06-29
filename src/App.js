@@ -1,58 +1,48 @@
-import React from 'react';
-import './App.css';
-import NewUserForm from './NewUserForm'
+import React from "react";
+import "./App.css";
+import NewUserForm from "./NewUserForm";
+import DisplayUsers from "./DisplayUsers";
+import NewPurchaseOrder from "./NewPurchaseOrder"
 
 class App extends React.Component {
-  constructor(props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       userFormvis: false,
-
-    }
-
-    this.handleSubmit = this.handleSubmit.bind(this)
+      allUsersVis: false,
+      purchaseOrderVis: false,
+    };
+    this.toggle = this.toggle.bind(this);
+    // this.DisplayUserstoggle = this.DisplayUserstoggle.bind(this)
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  toggle(view) {
+    console.log("View: ", view);
+    let currentstate = this.state[view];
+    this.setState({ [view]: !currentstate });
+  }
 
-    let data ={}
-      data.firstname = event.target.firstname.value;
-      data.lastname = event.target.lastname.value;
-      data.email = event.target.email.value;
-    
+  render() {
+    const { userFormvis, allUsersVis } = this.state;
 
-    let url = 'http://localhost:3000/createUser'
-
-
-  
-    fetch(url, {
-      method: 'POST', // or 'PUT'
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-  }  
-
-
-  render(){
-    console.log(this.state)
-  return (
-    <div className="App">
-    <button name ="newUser" onClick={this.setState({userFormvis: true})}>New User</button>
-    {this.state.userFormvis ? <NewUserForm onSubmit = {this.handleSubmit.bind(this)} />: null}
-
-    </div>
-  );
-}
-
+    return (
+      <div className="App">
+      <ul className = "mainScreen">
+        <button name="newUser" onClick={() => this.toggle("userFormvis")}>
+          New User
+        </button>
+        {this.state.userFormvis ? <NewUserForm /> : null}
+        <button name="allUsers" onClick={() => this.toggle("allUsersVis")}>
+          Display All Users
+        </button>
+        {this.state.allUsersVis ? <DisplayUsers /> : null}
+        <button name="purchaseOrder" onClick={() => this.toggle("purchaseOrderVis")}>
+          New Purchase Order
+        </button>
+        {this.state.purchaseOrderVis ? <NewPurchaseOrder /> : null}
+        </ul>
+      </div>
+    );
+  }
 }
 export default App;

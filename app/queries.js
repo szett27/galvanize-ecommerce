@@ -18,10 +18,10 @@ const listUsers = (request, response) => {
 };
 
 const createUser = (request, response) => {
-  let { firstName, lastName, email } = request.body;
+  let { firstname, lastname, email } = request.body;
   pool.query(
-    "INSERT INTO users(firstName, lastName, email) VALUES($1, $2, $3)",
-    [firstName, lastName, email],
+    "INSERT INTO users(firstname, lastname, email) VALUES($1, $2, $3)",
+    [firstname, lastname, email],
     (error, results) => {
       if (error) {
         throw error;
@@ -79,14 +79,39 @@ const deleteUser = (request, response) => {
     if (error) {
       throw error;
     }
+    response.status(200).send("User Deleted");
+  });
+};
+
+const listItems = (request, response) => {
+  pool.query("SELECT * FROM items", (error, results) => {
+    if (error) {
+      throw error;
+    }
     response.status(200).json(results.rows);
   });
 };
 
+const getItem = (request, response) => {
+  const id = parseInt(request.params.id);
+  pool.query("SELECT * FROM items WHERE id = $1", [id], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    console.log(results.rows);
+    response.status(200).json(results.rows);
+  });
+};
 
 let purchaseItem = (requestBody, response) => {
-  let {user_id, manufacturer, item, qty_ordered, date_ordered, date_recieved} = requestBody;
-
+  let {
+    user_id,
+    manufacturer,
+    item,
+    qty_ordered,
+    date_ordered,
+    date_recieved,
+  } = requestBody;
   pool.query(
     "INSERT INTO purchase_order(user_id,  manufacturer, item, qty_ordered, date_ordered, date_recieved) VALUES($1, $2, $3, $4, $5, $6)",
     [user_id, manufacturer, item, qty_ordered, date_ordered, date_recieved],
@@ -101,18 +126,84 @@ let purchaseItem = (requestBody, response) => {
   );
 };
 
-
 const buyItem = (request, response) => {
   let requestBody = request.body;
-  let item = request.body.item
+  let item = request.body.item;
   const id = parseInt(request.params.id);
-  pool.query("SELECT * FROM items WHERE name = $1", [item], (error, results) => {
+  pool.query(
+    "SELECT * FROM items WHERE name = $1",
+    [item],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      purchaseItem(requestBody, response);
+    }
+  );
+};
+
+
+let itemUpdate = (data, requestBody, response) => {
+  let { name, description } = requestBody;
+  for (let field in data) {
+    if (requestBody[field]) {
+      data[field] = requestBody[field];
+    }
+  }
+  pool.query(
+    "UPDATE items SET name=$2, description=$3 WHERE id = $1",
+    [data.id, data["name"], data["description"]],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).send("Item Updated");
+    }
+  );
+};
+
+const updateItem = (request, response) => {
+  let requestBody = request.body;
+  const id = parseInt(request.params.id);
+  pool.query("SELECT * FROM items WHERE id = $1", [id], (error, results) => {
     if (error) {
       throw error;
     }
-    purchaseItem(requestBody, response);
+    itemUpdate(results.rows[0], requestBody, response);
   });
 };
+
+const deleteItem = (request, response) => {
+  const id = parseInt(request.params.id);
+
+  pool.query("DELETE FROM items WHERE id = $1", [id], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).send("Item Deleted");
+  });
+};
+
+const listManufacturers = (request, response) => {
+  pool.query("SELECT * FROM manufacturers", (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
+};
+
+const getManufacturer = (request, response) => {
+  const id = parseInt(request.params.id);
+  pool.query("SELECT * FROM manufacturers WHERE id = $1", [id], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    console.log(results.rows);
+    response.status(200).json(results.rows);
+  });
+};
+
 
 
 module.exports = {
@@ -121,5 +212,11 @@ module.exports = {
   infoUser,
   updateUser,
   deleteUser,
-  buyItem
+  listItems,
+  getItem,
+  buyItem,
+  updateItem,
+  deleteItem,
+  listManufacturers,
+  getManufacturer
 };
