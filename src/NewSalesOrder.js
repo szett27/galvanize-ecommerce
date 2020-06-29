@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 
-class NewPurchaseOrder extends React.Component{
+class NewSalesOrder extends React.Component{
     constructor(props){
         super(props)
         this.state ={
@@ -118,4 +118,4 @@ render(){
 }
  
 
-export default NewPurchaseOrder
+export default NewSalesOrder

@@ -39,4 +39,15 @@
 
 .mainScreen {
   text-align: center;
+  list-style-type: none;
+  width: 100%;
+}
+
+button{
+  margin-top: 2px;
+  width: 30%;
+}
+
+h1{
+  text-align: center;
 }
