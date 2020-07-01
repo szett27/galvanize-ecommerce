@@ -2,7 +2,7 @@ const e = require("express");
 const Pool = require("pg").Pool;
 
 const pool = new Pool({
-  user: "scott",
+  user: "scottsdev",
   database: "e_commerce",
   host: "localhost",
   port: 5432,
@@ -126,6 +126,29 @@ let purchaseItem = (requestBody, response) => {
   );
 };
 
+let salesItem = (requestBody, response) => {
+  let {
+    user_id,
+    manufacturer,
+    item,
+    qty_ordered,
+    date_ordered,
+    date_recieved,
+  } = requestBody;
+  pool.query(
+    "INSERT INTO sales_order(user_id,  manufacturer, item, qty_ordered, date_ordered, date_recieved) VALUES($1, $2, $3, $4, $5, $6)",
+    [user_id, manufacturer, item, qty_ordered, date_ordered, date_recieved],
+    (error, results) => {
+      if (error) {
+        // throw error;
+        response.status(400).send("Item not found!");
+      } else {
+        response.status(200).send("Purchased!");
+      }
+    }
+  );
+};
+
 const buyItem = (request, response) => {
   let requestBody = request.body;
   let item = request.body.item;
@@ -218,5 +241,6 @@ module.exports = {
   updateItem,
   deleteItem,
   listManufacturers,
-  getManufacturer
+  getManufacturer,
+  salesItem,
 };

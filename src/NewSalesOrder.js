@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import ItemDisplay from "./ItemDisplay"
 
 class NewSalesOrder extends React.Component{
     constructor(props){
@@ -14,28 +15,25 @@ class NewSalesOrder extends React.Component{
     }
 
 
-    // id serial PRIMARY KEY,
-    // user_id INT REFERENCES users(id),
-    // manufacturer INT REFERENCES manufacturers(id),
-    // item INT REFERENCES items(id),
-    // qty_ordered INT,
-    // date_ordered DATE,
-    // date_recieved DATE
-
 
     handleSubmit(event) {
+        console.log("Event Happened")
         event.preventDefault();
-    
+
+        console.log("Event: ", event.target.qty_ordered.id)
         let data ={}
-          data.user = event.target.user.value;
-          data.manufacturer = event.target.manufacturer.value;
-          data.item = event.target.item.value;
+        //   data.user = event.target.user.value;
+        //   data.manufacturer = event.target.manufacturer.value;
+          data.item = 5;
           data.qty_ordered = event.target.qty_ordered.value;
-          data.date_ordered = Date.now();
+          data.date_ordered = this.state.today;
+          data.user_id = 1;
+          data.manufacturer = 1;
+          data.date_recieved = this.state.today;
           
         
         console.log("Data: ", data)
-        let url = 'http://localhost:3000/';
+        let url = 'http://localhost:3000/sales';
 
       
         fetch(url, {
@@ -67,15 +65,7 @@ class NewSalesOrder extends React.Component{
                 this.setState({
                   items: result,
                 });
-              })
-              .then(fetch("http://localhost:3000/manufacturers"))
-                    .then((res) => res.json())
-                    .then((result) => {
-                      this.setState({
-                        manufacturers: result,
-                      });
-                    });
-                    
+              })    
         }
     
     
@@ -87,32 +77,18 @@ render(){
     const{items, manufacturers} =  this.state
 
     return (
-        <form onSubmit={this.handleSubmit} >
-            <input type="text" name = "user" placeholder ="User..."/><br></br>
-            <select name = "item">
-
-                {items.map(item=>{
-                 return(
-                    <option value ={item['name']}>{item['name']}</option>
-                 )
-                 })}
-
-
-            </select>
-            <select name = "manufacturer">
-
-                {manufacturers.map(manufacturer=>{
-                return(
-                    <option value ={manufacturer['companyname']}>{manufacturer['companyname']}</option>
-                )
-                })}
-
-
-            </select>
-            <input type ="text" name = "qty_ordered" placeholder ="Qty.."/><br></br>
-            <div>Date: {this.state.today}</div> 
-            <button type="submit">Submit</button>
-        </form>
+        <div>
+        <h2>What will you buy today?</h2>
+        <ul>
+           
+        {items.map(item=>{
+            return(
+               <ItemDisplay onSubmit = {this.handleSubmit.bind(this)} name={item.name} description={item.description} />
+            )
+            })}
+        </ul>
+        </div>
+       
     )
                 }
 }

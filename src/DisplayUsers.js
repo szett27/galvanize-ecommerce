@@ -30,11 +30,15 @@ class DisplayUsers extends React.Component {
       <div>
         {this.state.allUsers.map((user) => {
           return (
-            <ul>
-              <li> First Name: {user.firstname} </li>
-              <li> Last Name: {user.lastname} </li>
-              <li> Email: {user.email} </li>
-            </ul>
+            <div>
+              <ul>
+                <li> First Name: {user.firstname} </li>
+                <li> Last Name: {user.lastname} </li>
+                <li> Email: {user.email} </li>
+              </ul>
+              <br />
+              <br />
+            </div>
           );
         })}
       </div>

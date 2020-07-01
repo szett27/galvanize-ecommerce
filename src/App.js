@@ -49,10 +49,10 @@ class App extends React.Component {
           New Purchase Order
         </button></li>: null}
         {this.state.purchaseOrderVis &&  businessVis? <NewPurchaseOrder /> : null}
-        {consumerVis ? <li><button name="salesOrder" onClick={() => this.toggle("salesOrderVis")}>
+        {/* {consumerVis ? <li><button name="salesOrder" onClick={() => this.toggle("salesOrderVis")}>
           New Sales Order
-        </button></li>: null}
-        {this.state.salesOrderVis &&  consumerVis? <NewSalesOrder /> : null}
+        </button></li>: null} */}
+        {consumerVis? <NewSalesOrder /> : null}
         </ul>
       </div>
     );

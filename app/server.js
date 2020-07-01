@@ -32,6 +32,9 @@ app.delete("/item/:id", db.deleteItem);
 app.get("/manufacturers", db.listManufacturers);
 app.get("/manufacturer/:id", db.getManufacturer);
 
+//SALES
+app.post("/sales", db.salesItem)
+
 app.listen(port, () =>
   console.log(`Example app listening at http://localhost:${port}`)
 );

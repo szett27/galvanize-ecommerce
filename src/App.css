@@ -43,11 +43,30 @@
   width: 100%;
 }
 
+body{
+  background-color: #73A0F4;
+}
+
 button{
   margin-top: 2px;
   width: 30%;
+  background-color: aliceblue;
+  font-size: large;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+button:hover{
+  background-color: darkgray;
 }
 
 h1{
   text-align: center;
+  color: whitesmoke;
+  border-style: solid;
+  border-color: black;
+}
+
+li{
+  border-style: solid;
+  list-style-type: none;
 }
